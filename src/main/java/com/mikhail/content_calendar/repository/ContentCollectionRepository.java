@@ -18,6 +18,9 @@ public class ContentCollectionRepository {
 
     private final List<Content> contentList = new ArrayList<>();
 
+//    Connect the JdbcTemplateRepo
+//    private final ContentJdbcTemplateRepository contentJdbcTemplateRepository;
+
     public ContentCollectionRepository() {
     }
 

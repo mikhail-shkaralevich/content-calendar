@@ -2,7 +2,10 @@ package com.mikhail.content_calendar.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,16 +18,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mikhail.content_calendar.model.Content;
-import com.mikhail.content_calendar.repository.ContentCollectionRepository;
+import com.mikhail.content_calendar.model.Status;
+import com.mikhail.content_calendar.repository.ContentRepository;
 
 @RestController
 @RequestMapping("/api/content")
+@CrossOrigin
 public class ContentController {
 
-    private ContentCollectionRepository repository;
+//    private ContentCollectionRepository repository;
 
-    public ContentController(ContentCollectionRepository contentCollectionRepository) {
-        this.repository = contentCollectionRepository;
+    private ContentRepository repository;
+
+    public ContentController(ContentRepository repository) {
+        this.repository = repository;
     }
 
     @GetMapping("")
@@ -39,7 +46,7 @@ public class ContentController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
-    public void create(@RequestBody Content content) {
+    public void create(@Valid @RequestBody Content content) {
         repository.save(content);
     }
 
@@ -55,6 +62,16 @@ public class ContentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Integer id) {
-        repository.delete(id);
+        repository.deleteById(id);
+    }
+
+    @GetMapping("/filter/{keyword}")
+    public List<Content> findByTitle(@PathVariable String keyword) {
+        return repository.findAllByTitleContains(keyword);
+    }
+
+    @GetMapping("/filter/status/{status}")
+    public List<Content> filterByStatus(@PathVariable Status status) {
+        return repository.listByStatus(status);
     }
 }

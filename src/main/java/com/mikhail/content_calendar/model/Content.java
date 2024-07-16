@@ -1,12 +1,19 @@
 package com.mikhail.content_calendar.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.validation.constraints.NotBlank;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+
 public record Content(
+        @Id
         Integer id,
+        @NotBlank
         String title,
-        String desc,
+        @Column(value = "description")
+        String description,
         Status status,
         Type contentType,
         LocalDateTime dateCreated,
